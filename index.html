@@ -16,19 +16,17 @@
   @keyframes pulseA { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
   .scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
   .scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
-  details > summary { list-style: none; cursor: pointer; }
-  details > summary::-webkit-details-marker { display: none; }
-  input[type="number"], input[type="text"], textarea { background: rgba(0,0,0,0.35); color: #fff; }
 
-  /* ==== NEXT BOX ==== */
+  /* ==== NEXT BOX (rectangular, compact, wraps nicely on mobile) ==== */
   .next-box {
     background: #0b0b0e;
     border: 1px solid rgba(251,146,60,0.18);
     border-radius: 18px;
-    padding: 18px 20px;
+    padding: 14px 16px;
     display: flex;
     align-items: center;
-    gap: 18px;
+    gap: 14px;
+    flex-wrap: nowrap;
   }
   .next-pill {
     flex-shrink: 0;
@@ -36,9 +34,9 @@
     color: #fb923c;
     font-weight: 800;
     letter-spacing: 0.1em;
-    font-size: 13px;
-    padding: 10px 20px;
-    border-radius: 14px;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 12px;
     background: transparent;
   }
   .next-pill-right {
@@ -46,25 +44,28 @@
     border: 1.5px solid #fb923c;
     color: #fb923c;
     font-weight: 600;
-    font-size: 13px;
-    padding: 8px 18px;
+    font-size: 12px;
+    padding: 6px 14px;
     border-radius: 9999px;
     background: transparent;
     margin-left: auto;
   }
-  .next-label {
-    color: #fb923c;
-    font-size: 12px;
-    font-weight: 800;
-    letter-spacing: 0.18em;
+  .next-label { color: #fb923c; font-size: 11px; font-weight: 800; letter-spacing: 0.18em; }
+  .next-title { font-size: 20px; font-weight: 800; color: #fff; margin-top: 2px; line-height: 1.15; }
+  .next-sub { color: #9ca3af; font-size: 12px; margin-top: 3px; line-height: 1.35; }
+  @media (max-width: 480px) {
+    .next-box { padding: 12px 12px; gap: 10px; }
+    .next-pill { font-size: 10px; padding: 5px 10px; letter-spacing: 0.08em; }
+    .next-pill-right { font-size: 10px; padding: 5px 10px; }
+    .next-title { font-size: 16px; }
+    .next-label { font-size: 10px; }
+    .next-sub { font-size: 11px; }
   }
-  .next-title { font-size: 22px; font-weight: 800; color: #fff; margin-top: 2px; }
-  .next-sub { color: #9ca3af; font-size: 13px; margin-top: 4px; }
 
   /* ==== FOOTER ==== */
   .site-footer {
     border-top: 1px solid rgba(255,255,255,0.06);
-    padding: 22px 0 10px;
+    padding: 22px 0 90px; /* bottom padding so puppy doesn't overlap text */
     text-align: center;
     color: #6b7280;
     font-size: 13px;
@@ -79,18 +80,15 @@
     transition: opacity 900ms ease;
   }
   #celebration.fade { opacity: 0; }
-
-  /* Bigger, brighter rising trail */
   .firework-trail {
     position: absolute; width: 7px; height: 7px; border-radius: 50%;
     animation: firework-rise 1000ms cubic-bezier(.2,.7,.3,1) forwards;
     filter: drop-shadow(0 0 8px currentColor);
   }
   @keyframes firework-rise {
-    0% { transform: translateY(0) scale(1); opacity: 1; }
+    0%   { transform: translateY(0) scale(1); opacity: 1; }
     100% { transform: translateY(-320px) scale(0.5); opacity: 0.95; }
   }
-  /* Bigger sparks, brighter glow */
   .spark {
     position: absolute; width: 7px; height: 7px; border-radius: 50%;
     animation: spark-out 1600ms cubic-bezier(.1,.8,.3,1) forwards;
@@ -101,52 +99,69 @@
     100% { transform: translate(var(--dx), var(--dy)) scale(0.15); opacity: 0; }
   }
 
-  /* ==== YELLOW LABRADOR PUPPY (permanent, hopping L↔R) ==== */
+  /* ==== YELLOW LABRADOR PUPPY (full body SVG, permanent, hopping L↔R) ==== */
   #puppy {
     position: fixed;
     left: 0;
-    bottom: 8px;
-    z-index: 40;             /* above body content, below celebration */
+    bottom: 10px;
+    z-index: 40;
     pointer-events: none;
-    font-size: 42px;
-    line-height: 1;
-    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
-    animation: puppy-travel 16s ease-in-out infinite;
+    width: 90px; height: 70px;
+    filter: drop-shadow(0 6px 6px rgba(0,0,0,0.45));
+    animation: puppy-travel 18s ease-in-out infinite;
     transform-origin: center bottom;
     will-change: left, transform;
     user-select: none;
   }
-  /* Left-to-right then back; flips horizontally on return leg */
-  @keyframes puppy-travel {
-    0%   { left: 2vw;  transform: scaleX(1); }
-    48%  { left: calc(100vw - 70px); transform: scaleX(1); }
-    50%  { left: calc(100vw - 70px); transform: scaleX(-1); }
-    98%  { left: 2vw;  transform: scaleX(-1); }
-    100% { left: 2vw;  transform: scaleX(1); }
-  }
-  /* Hop: lift + slight squash. Layered on top of travel via nested span. */
   #puppy .puppy-inner {
-    display: inline-block;
+    display: block;
+    width: 100%; height: 100%;
     animation: puppy-hop-inner 0.55s ease-in-out infinite;
     transform-origin: center bottom;
   }
+  #puppy svg { width: 100%; height: 100%; display: block; }
+
+  /* Tail wag */
+  #puppy .tail { transform-origin: 76px 28px; animation: tail-wag 0.35s ease-in-out infinite; }
+  @keyframes tail-wag {
+    0%,100% { transform: rotate(-15deg); }
+    50%     { transform: rotate(20deg); }
+  }
+  /* Ear flop */
+  #puppy .ear-front { transform-origin: 28px 18px; animation: ear-flop 0.55s ease-in-out infinite; }
+  @keyframes ear-flop {
+    0%,100% { transform: rotate(-4deg); }
+    40%     { transform: rotate(-14deg); }
+    80%     { transform: rotate(2deg); }
+  }
+
+  /* Left-to-right then back; flips horizontally on return leg */
+  @keyframes puppy-travel {
+    0%   { left: 2vw;                       transform: scaleX(1); }
+    48%  { left: calc(100vw - 100px);       transform: scaleX(1); }
+    50%  { left: calc(100vw - 100px);       transform: scaleX(-1); }
+    98%  { left: 2vw;                       transform: scaleX(-1); }
+    100% { left: 2vw;                       transform: scaleX(1); }
+  }
+  /* Hop: lift + slight squash */
   @keyframes puppy-hop-inner {
     0%,100% { transform: translateY(0) scaleY(1); }
-    40%     { transform: translateY(-22px) scaleY(1.05); }
-    80%     { transform: translateY(0) scaleY(0.92); }
+    40%     { transform: translateY(-24px) scaleY(1.04); }
+    80%     { transform: translateY(0) scaleY(0.94); }
   }
+
   @media (max-width: 480px) {
-    #puppy { font-size: 34px; }
+    #puppy { width: 72px; height: 56px; }
     @keyframes puppy-travel {
-      0%   { left: 2vw;  transform: scaleX(1); }
-      48%  { left: calc(100vw - 56px); transform: scaleX(1); }
-      50%  { left: calc(100vw - 56px); transform: scaleX(-1); }
-      98%  { left: 2vw;  transform: scaleX(-1); }
-      100% { left: 2vw;  transform: scaleX(1); }
+      0%   { left: 2vw;                     transform: scaleX(1); }
+      48%  { left: calc(100vw - 80px);      transform: scaleX(1); }
+      50%  { left: calc(100vw - 80px);      transform: scaleX(-1); }
+      98%  { left: 2vw;                     transform: scaleX(-1); }
+      100% { left: 2vw;                     transform: scaleX(1); }
     }
   }
   @media (prefers-reduced-motion: reduce) {
-    #puppy, #puppy .puppy-inner { animation: none; }
+    #puppy, #puppy .puppy-inner, #puppy .tail, #puppy .ear-front { animation: none; }
     #celebration { display: none; }
   }
 </style>
@@ -154,7 +169,44 @@
 <body class="bg-slate-950 text-slate-100 min-h-screen">
 
 <div id="celebration" aria-hidden="true"></div>
-<div id="puppy" aria-hidden="true" title="Fairways mascot"><span class="puppy-inner">🐶</span></div>
+
+<!-- Full-body yellow Labrador puppy SVG: body, head, 4 legs, tail, ears, eye, nose, collar -->
+<div id="puppy" aria-hidden="true" title="Fairways mascot">
+  <span class="puppy-inner">
+    <svg viewBox="0 0 110 80" xmlns="http://www.w3.org/2000/svg">
+      <!-- Back legs -->
+      <ellipse cx="32" cy="66" rx="7" ry="10" fill="#c58a3b"/>
+      <ellipse cx="32" cy="72" rx="8" ry="4" fill="#d99a48"/>
+      <!-- Front legs -->
+      <ellipse cx="68" cy="66" rx="7" ry="10" fill="#d99a48"/>
+      <ellipse cx="68" cy="72" rx="8" ry="4" fill="#e8b060"/>
+      <!-- Body -->
+      <ellipse cx="50" cy="48" rx="30" ry="18" fill="#e8b060"/>
+      <!-- Belly highlight -->
+      <ellipse cx="50" cy="56" rx="22" ry="8" fill="#f5cc85" opacity="0.85"/>
+      <!-- Tail (wagging) -->
+      <path class="tail" d="M 76 30 Q 92 18 96 8 Q 98 14 90 24 Q 84 32 78 34 Z" fill="#d99a48"/>
+      <!-- Head -->
+      <circle cx="24" cy="34" r="18" fill="#e8b060"/>
+      <!-- Snout -->
+      <ellipse cx="12" cy="40" rx="9" ry="6" fill="#f5cc85"/>
+      <!-- Nose -->
+      <ellipse cx="6" cy="39" rx="3" ry="2.5" fill="#1f2937"/>
+      <!-- Mouth -->
+      <path d="M 8 43 Q 11 46 14 44" stroke="#7c4a1f" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+      <!-- Eye -->
+      <circle cx="22" cy="30" r="2.2" fill="#1f2937"/>
+      <circle cx="22.7" cy="29.3" r="0.7" fill="#fff"/>
+      <!-- Back ear (behind head) -->
+      <path d="M 34 18 Q 42 14 44 26 Q 40 30 34 28 Z" fill="#c58a3b"/>
+      <!-- Front ear (floppy, animated) -->
+      <path class="ear-front" d="M 28 18 Q 20 10 14 20 Q 16 30 24 30 Q 30 28 28 18 Z" fill="#c58a3b"/>
+      <!-- Collar -->
+      <rect x="28" y="47" width="12" height="3.5" rx="1.5" fill="#ef4444"/>
+      <circle cx="40" cy="49" r="1.5" fill="#facc15"/>
+    </svg>
+  </span>
+</div>
 
 <div class="max-w-5xl mx-auto px-4 py-6 sm:py-10">
 
@@ -247,57 +299,6 @@
     </div>
   </section>
 
-  <!-- UPDATE DATA -->
-  <section class="mb-10">
-    <details class="card rounded-2xl">
-      <summary class="px-5 py-4 flex items-center justify-between">
-        <span class="font-bold">⚙️ Update Data</span>
-        <span class="text-xs text-slate-400">Edit team points → leaderboard auto-recalculates</span>
-      </summary>
-      <div class="px-5 pb-5 pt-2 space-y-4">
-        <div>
-          <p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Team Stats</p>
-          <div id="editTeams" class="grid grid-cols-1 gap-2"></div>
-        </div>
-        <div class="grid sm:grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Matches Played</label>
-            <input id="editPlayed" type="number" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
-          </div>
-          <div>
-            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Updated Line</label>
-            <input id="editUpdated" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
-          </div>
-        </div>
-        <div class="grid sm:grid-cols-2 gap-3">
-          <div>
-            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match Label</label>
-            <input id="editNextLabel" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
-          </div>
-          <div>
-            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match Right Tag</label>
-            <input id="editNextRight" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
-          </div>
-          <div>
-            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match Title</label>
-            <input id="editNextTitle" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
-          </div>
-          <div>
-            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match Subtitle</label>
-            <input id="editNextSub" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
-          </div>
-        </div>
-        <div>
-          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Recent Results (one per line: <code>M22|14 Apr|CSK beat KKR by 32 runs</code>)</label>
-          <textarea id="editResults" rows="4" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10 font-mono text-xs"></textarea>
-        </div>
-        <button onclick="applyUpdate()" class="px-5 py-2 rounded-xl bg-yellow-400 text-slate-900 font-bold hover:bg-yellow-300 transition">
-          🔄 Recalculate & Update Dashboard
-        </button>
-      </div>
-    </details>
-  </section>
-
   <!-- FOOTER -->
   <footer class="site-footer">
     <div>IPL 2026 Fantasy Scoreboard · Updated daily at 1:30 PM CST</div>
@@ -328,16 +329,16 @@ let state = {
   nextSub:   "15 April 2026 · 7:30 PM IST · M. Chinnaswamy Stadium, Bengaluru",
   nextRight: "Tomorrow",
   pointsTable: [
-    { team:"RR",   M:5, W:4, L:1, NR:0, Pts:8, NRR:"+0.889" },
-    { team:"PBKS", M:4, W:3, L:0, NR:1, Pts:7, NRR:"+0.720" },
-    { team:"RCB",  M:4, W:3, L:1, NR:0, Pts:6, NRR:"+1.148" },
-    { team:"SRH",  M:5, W:2, L:3, NR:0, Pts:4, NRR:"+0.576" },
-    { team:"DC",   M:4, W:2, L:2, NR:0, Pts:4, NRR:"+0.322" },
-    { team:"GT",   M:4, W:2, L:2, NR:0, Pts:4, NRR:"-0.029" },
-    { team:"LSG",  M:4, W:2, L:2, NR:0, Pts:4, NRR:"-0.427" },
-    { team:"CSK",  M:5, W:2, L:3, NR:0, Pts:4, NRR:"TBC" },
-    { team:"MI",   M:4, W:1, L:3, NR:0, Pts:2, NRR:"-0.772" },
-    { team:"KKR",  M:5, W:0, L:4, NR:1, Pts:1, NRR:"TBC" }
+    { team:"RR",   M:5, W:4, L:1, NR:0, Pts:8 },
+    { team:"PBKS", M:4, W:3, L:0, NR:1, Pts:7 },
+    { team:"RCB",  M:4, W:3, L:1, NR:0, Pts:6 },
+    { team:"SRH",  M:5, W:2, L:3, NR:0, Pts:4 },
+    { team:"DC",   M:4, W:2, L:2, NR:0, Pts:4 },
+    { team:"GT",   M:4, W:2, L:2, NR:0, Pts:4 },
+    { team:"LSG",  M:4, W:2, L:2, NR:0, Pts:4 },
+    { team:"CSK",  M:5, W:2, L:3, NR:0, Pts:4 },
+    { team:"MI",   M:4, W:1, L:3, NR:0, Pts:2 },
+    { team:"KKR",  M:5, W:0, L:4, NR:1, Pts:1 }
   ],
   recentResults: [
     { num:"M22", date:"14 Apr", winner:"CSK", loser:"KKR", margin:"32 runs" },
@@ -381,7 +382,6 @@ function medalIcon(rank){
   if(rank===3) return `<span class="text-2xl">🥉</span>`;
   return `<span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-white/5 text-slate-400 font-bold text-sm">${rank}</span>`;
 }
-function parseNRR(s){ const n = parseFloat(s); return isNaN(n) ? -999 : n; }
 
 function render(){
   document.getElementById("updatedLine").textContent = state.updated;
@@ -408,8 +408,7 @@ function render(){
   const second = board.find(r => r.points < board[0].points);
   document.getElementById("statGap").textContent = second ? (board[0].points - second.points) : 0;
 
-  const lb = document.getElementById("leaderboard");
-  lb.innerHTML = board.map(row => {
+  document.getElementById("leaderboard").innerHTML = board.map(row => {
     const isLeader = row.rank === 1;
     return `
     <div class="card rounded-2xl p-4 ${isLeader?'leader-row':''}">
@@ -457,65 +456,9 @@ function render(){
       <td class="px-4 py-3 text-right text-yellow-300 font-black text-base">${r.Pts}</td>
     </tr>
   `).join("");
-
-  document.getElementById("editTeams").innerHTML = state.pointsTable.map(t=>`
-    <div class="flex items-center gap-2 bg-black/30 rounded-lg px-2 py-1.5 border border-white/5 flex-wrap">
-      <span class="dot" style="background:${TEAMS[t.team].color};"></span>
-      <span class="text-xs font-bold w-12">${t.team}</span>
-      <label class="text-[10px] text-slate-400">Pts</label>
-      <input type="number" value="${t.Pts}" data-team="${t.team}" data-field="Pts" class="edit-field w-14 rounded px-2 py-0.5 text-sm border border-white/10" />
-      <label class="text-[10px] text-slate-400">M</label>
-      <input type="number" value="${t.M}" data-team="${t.team}" data-field="M" class="edit-field w-12 rounded px-2 py-0.5 text-sm border border-white/10" />
-      <label class="text-[10px] text-slate-400">W</label>
-      <input type="number" value="${t.W}" data-team="${t.team}" data-field="W" class="edit-field w-12 rounded px-2 py-0.5 text-sm border border-white/10" />
-      <label class="text-[10px] text-slate-400">L</label>
-      <input type="number" value="${t.L}" data-team="${t.team}" data-field="L" class="edit-field w-12 rounded px-2 py-0.5 text-sm border border-white/10" />
-      <label class="text-[10px] text-slate-400">NR</label>
-      <input type="number" value="${t.NR}" data-team="${t.team}" data-field="NR" class="edit-field w-12 rounded px-2 py-0.5 text-sm border border-white/10" />
-    </div>
-  `).join("");
-  document.getElementById("editPlayed").value = state.matchesPlayed;
-  document.getElementById("editUpdated").value = state.updated;
-  document.getElementById("editNextLabel").value = state.nextLabel;
-  document.getElementById("editNextTitle").value = state.nextTitle;
-  document.getElementById("editNextSub").value = state.nextSub;
-  document.getElementById("editNextRight").value = state.nextRight;
-  document.getElementById("editResults").value = state.recentResults.map(r=>
-    `${r.num}|${r.date}|${r.winner} beat ${r.loser} by ${r.margin}`
-  ).join("\n");
 }
 
-function applyUpdate(){
-  document.querySelectorAll(".edit-field").forEach(inp=>{
-    const code = inp.dataset.team;
-    const field = inp.dataset.field;
-    const row = state.pointsTable.find(t=>t.team===code);
-    if (!row) return;
-    if (field === "NRR") row.NRR = inp.value.trim();
-    else row[field] = parseInt(inp.value)||0;
-  });
-  state.matchesPlayed = parseInt(document.getElementById("editPlayed").value)||0;
-  state.updated       = document.getElementById("editUpdated").value;
-  state.nextLabel     = document.getElementById("editNextLabel").value;
-  state.nextTitle     = document.getElementById("editNextTitle").value;
-  state.nextSub       = document.getElementById("editNextSub").value;
-  state.nextRight     = document.getElementById("editNextRight").value;
-
-  const lines = document.getElementById("editResults").value.split("\n").filter(l=>l.trim());
-  state.recentResults = lines.slice(0,3).map(l=>{
-    const parts = l.split("|");
-    if (parts.length>=3) {
-      const m = parts[2].match(/(\w+)\s+beat\s+(\w+)\s+by\s+(.+)/i);
-      if (m) return { num:parts[0].trim(), date:parts[1].trim(), winner:m[1].toUpperCase(), loser:m[2].toUpperCase(), margin:m[3].trim() };
-    }
-    return null;
-  }).filter(Boolean);
-
-  render();
-  window.scrollTo({top:0, behavior:"smooth"});
-}
-
-// ===== CELEBRATION (prominent fireworks, 5–6s, no puppy here) =====
+// ===== CELEBRATION (prominent fireworks, 5–6s) =====
 function playCelebration(){
   const overlay = document.getElementById("celebration");
   if (!overlay) return;
@@ -525,15 +468,15 @@ function playCelebration(){
   ];
   const isMobile = window.innerWidth < 480;
   const W = window.innerWidth;
-  const TOP_ZONE = Math.min(320, window.innerHeight * 0.45); // top + upper center
+  const TOP_ZONE = Math.min(320, window.innerHeight * 0.45);
 
   function burst(x, y){
-    const count = isMobile ? 28 : 46; // more particles per burst
+    const count = isMobile ? 28 : 46;
     for (let i=0; i<count; i++){
       const s = document.createElement("div");
       s.className = "spark";
       const angle = (Math.PI*2) * (i/count) + Math.random()*0.12;
-      const dist = 90 + Math.random()*130; // bigger radius
+      const dist = 90 + Math.random()*130;
       s.style.setProperty("--dx", Math.cos(angle)*dist + "px");
       s.style.setProperty("--dy", Math.sin(angle)*dist + "px");
       s.style.left = x + "px";
@@ -544,7 +487,6 @@ function playCelebration(){
       overlay.appendChild(s);
       setTimeout(()=>s.remove(), 1800);
     }
-    // Inner core flash
     const flash = document.createElement("div");
     flash.className = "spark";
     flash.style.left = x + "px";
@@ -558,7 +500,6 @@ function playCelebration(){
     setTimeout(()=>flash.remove(), 600);
   }
   function launch(){
-    // Spread across full width; bias some toward center
     const centerBias = Math.random() < 0.45;
     const startX = centerBias
       ? (W*0.3 + Math.random()*W*0.4)
@@ -567,4 +508,28 @@ function playCelebration(){
     const f = document.createElement("div");
     f.className = "firework-trail";
     f.style.left = startX + "px";
-    f.styl
+    f.style.top  = (peakY + 320) + "px";
+    const col = colors[Math.floor(Math.random()*colors.length)];
+    f.style.color = col;
+    f.style.background = col;
+    f.style.boxShadow = `0 0 20px ${col}`;
+    overlay.appendChild(f);
+    setTimeout(()=>{
+      burst(startX, peakY);
+      f.remove();
+    }, 950);
+  }
+  const total = isMobile ? 18 : 28;
+  for (let i=0; i<total; i++){
+    setTimeout(launch, i * (isMobile ? 260 : 170) + Math.random()*120);
+  }
+  setTimeout(()=> overlay.classList.add("fade"), 5200);
+  setTimeout(()=> { if (overlay.parentNode) overlay.remove(); }, 6200);
+}
+
+window.addEventListener("load", playCelebration);
+render();
+</script>
+</body>
+</html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                

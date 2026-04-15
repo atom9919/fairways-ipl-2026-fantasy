@@ -12,16 +12,140 @@
   .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); }
   .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: .3px; }
   .dot { width: 8px; height: 8px; border-radius: 9999px; display: inline-block; }
-  .pulse { animation: pulse 2s infinite; }
-  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
+  .pulse { animation: pulseA 2s infinite; }
+  @keyframes pulseA { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
   .scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
   .scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
   details > summary { list-style: none; cursor: pointer; }
   details > summary::-webkit-details-marker { display: none; }
-  input[type="number"], textarea { background: rgba(0,0,0,0.35); }
+  input[type="number"], input[type="text"], textarea { background: rgba(0,0,0,0.35); color: #fff; }
+
+  /* ==== NEXT BOX ==== */
+  .next-box {
+    background: #0b0b0e;
+    border: 1px solid rgba(251,146,60,0.18);
+    border-radius: 18px;
+    padding: 18px 20px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .next-pill {
+    flex-shrink: 0;
+    border: 1.5px solid #fb923c;
+    color: #fb923c;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    font-size: 13px;
+    padding: 10px 20px;
+    border-radius: 14px;
+    background: transparent;
+  }
+  .next-pill-right {
+    flex-shrink: 0;
+    border: 1.5px solid #fb923c;
+    color: #fb923c;
+    font-weight: 600;
+    font-size: 13px;
+    padding: 8px 18px;
+    border-radius: 9999px;
+    background: transparent;
+    margin-left: auto;
+  }
+  .next-label {
+    color: #fb923c;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.18em;
+  }
+  .next-title { font-size: 22px; font-weight: 800; color: #fff; margin-top: 2px; }
+  .next-sub { color: #9ca3af; font-size: 13px; margin-top: 4px; }
+
+  /* ==== FOOTER ==== */
+  .site-footer {
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 22px 0 10px;
+    text-align: center;
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .site-footer .espn { color: #fb923c; font-weight: 600; }
+
+  /* ==== CELEBRATION OVERLAY ==== */
+  #celebration {
+    position: fixed; inset: 0; z-index: 9999; pointer-events: none;
+    overflow: hidden;
+    transition: opacity 800ms ease;
+  }
+  #celebration.fade { opacity: 0; }
+  .firework {
+    position: absolute; width: 6px; height: 6px; border-radius: 50%;
+    animation: firework-rise 900ms cubic-bezier(.2,.7,.3,1) forwards;
+  }
+  @keyframes firework-rise {
+    0% { transform: translateY(0) scale(1); opacity: 1; }
+    100% { transform: translateY(-340px) scale(0.4); opacity: 0.9; }
+  }
+  .spark {
+    position: absolute; width: 5px; height: 5px; border-radius: 50%;
+    animation: spark-out 1200ms cubic-bezier(.1,.8,.3,1) forwards;
+  }
+  @keyframes spark-out {
+    0% { transform: translate(0,0) scale(1); opacity: 1; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+  }
+  .six-text {
+    position: absolute;
+    left: 50%; top: 38%;
+    transform: translate(-50%, -50%) scale(0);
+    font-family: 'Impact', 'Arial Black', sans-serif;
+    font-size: clamp(80px, 18vw, 180px);
+    font-weight: 900;
+    color: #fff;
+    -webkit-text-stroke: 3px #fb923c;
+    text-shadow: 0 0 30px rgba(251,146,60,.9), 0 0 60px rgba(250,204,21,.6);
+    letter-spacing: 0.05em;
+    animation: six-pop 1800ms cubic-bezier(.2,1.6,.3,1) forwards;
+  }
+  @keyframes six-pop {
+    0% { transform: translate(-50%,-50%) scale(0) rotate(-15deg); opacity: 0; }
+    30% { transform: translate(-50%,-50%) scale(1.25) rotate(5deg); opacity: 1; }
+    55% { transform: translate(-50%,-50%) scale(1) rotate(0deg); opacity: 1; }
+    100% { transform: translate(-50%,-50%) scale(1.05) rotate(0deg); opacity: 1; }
+  }
+  .ball {
+    position: absolute;
+    left: -60px; top: 55%;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #fef2f2 0%, #dc2626 45%, #7f1d1d 100%);
+    box-shadow: 0 0 14px rgba(220,38,38,.7);
+    animation: ball-fly 1100ms cubic-bezier(.25,.8,.2,1) forwards;
+  }
+  @keyframes ball-fly {
+    0% { left: -60px; top: 85%; transform: rotate(0deg) scale(0.7); }
+    100% { left: 110%; top: 10%; transform: rotate(1800deg) scale(1.1); }
+  }
+  .bat {
+    position: absolute; left: 8%; top: 62%;
+    width: 70px; height: 12px; background: linear-gradient(90deg,#d97706,#f59e0b);
+    border-radius: 4px;
+    transform-origin: right center;
+    transform: rotate(20deg) scale(0);
+    animation: bat-swing 800ms cubic-bezier(.2,.9,.3,1) forwards;
+  }
+  @keyframes bat-swing {
+    0% { transform: rotate(80deg) scale(0); opacity: 0; }
+    20% { transform: rotate(70deg) scale(1); opacity: 1; }
+    60% { transform: rotate(-40deg) scale(1); opacity: 1; }
+    100% { transform: rotate(-60deg) scale(0.9); opacity: 0; }
+  }
 </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen">
+
+<div id="celebration" aria-hidden="true"></div>
 
 <div class="max-w-5xl mx-auto px-4 py-6 sm:py-10">
 
@@ -40,14 +164,20 @@
         <span class="dot" style="background:#ef4444;"></span> LIVE
       </div>
     </div>
-
-    <!-- NEXT MATCH -->
-    <div id="nextMatch" class="mt-5 inline-flex items-center gap-3 rounded-full px-4 py-2"
-      style="background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.35);">
-      <span class="text-emerald-400 font-bold">▶ Next</span>
-      <span class="text-slate-100 font-semibold text-sm sm:text-base">M23 · RCB vs LSG · 15 Apr 2026 · 7:30 PM IST · Chinnaswamy</span>
-    </div>
   </header>
+
+  <!-- NEXT MATCH BOX -->
+  <section class="mb-6">
+    <div class="next-box">
+      <div class="next-pill">NEXT</div>
+      <div class="min-w-0 flex-1">
+        <div class="next-label" id="nextLabelTop">NEXT MATCH · M23</div>
+        <div class="next-title" id="nextTitle">RCB vs LSG</div>
+        <div class="next-sub" id="nextSub">15 April 2026 · 7:30 PM IST · M. Chinnaswamy Stadium, Bengaluru</div>
+      </div>
+      <div class="next-pill-right" id="nextRightLabel">Tomorrow</div>
+    </div>
+  </section>
 
   <!-- SUMMARY CARDS -->
   <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
@@ -99,8 +229,7 @@
               <th class="text-center px-3 py-3">W</th>
               <th class="text-center px-3 py-3">L</th>
               <th class="text-center px-3 py-3">NR</th>
-              <th class="text-center px-3 py-3 text-yellow-300">Pts</th>
-              <th class="text-right px-4 py-3">NRR</th>
+              <th class="text-right px-4 py-3 text-yellow-300">Pts</th>
             </tr>
           </thead>
           <tbody id="iplTable" class="divide-y divide-white/5"></tbody>
@@ -118,24 +247,40 @@
       </summary>
       <div class="px-5 pb-5 pt-2 space-y-4">
         <div>
-          <p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Team Points</p>
-          <div id="editTeams" class="grid grid-cols-2 sm:grid-cols-5 gap-2"></div>
+          <p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Team Stats</p>
+          <div id="editTeams" class="grid grid-cols-1 gap-2"></div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Matches Played</label>
+            <input id="editPlayed" type="number" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Updated Line</label>
+            <input id="editUpdated" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
+          </div>
+        </div>
+        <div class="grid sm:grid-cols-2 gap-3">
+          <div>
+            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match Label</label>
+            <input id="editNextLabel" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match Right Tag</label>
+            <input id="editNextRight" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match Title</label>
+            <input id="editNextTitle" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
+          </div>
+          <div>
+            <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match Subtitle</label>
+            <input id="editNextSub" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
+          </div>
         </div>
         <div>
-          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Matches Played</label>
-          <input id="editPlayed" type="number" class="w-32 ml-3 rounded-lg px-3 py-1 border border-white/10" />
-        </div>
-        <div>
-          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match (text)</label>
-          <input id="editNext" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
-        </div>
-        <div>
-          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Recent Results (one per line: "Team1 beat Team2 by X runs/wkts")</label>
+          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Recent Results (one per line: <code>M22|14 Apr|CSK beat KKR by 32 runs</code>)</label>
           <textarea id="editResults" rows="4" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10 font-mono text-xs"></textarea>
-        </div>
-        <div>
-          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Updated Line</label>
-          <input id="editUpdated" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
         </div>
         <button onclick="applyUpdate()" class="px-5 py-2 rounded-xl bg-yellow-400 text-slate-900 font-bold hover:bg-yellow-300 transition">
           🔄 Recalculate & Update Dashboard
@@ -144,13 +289,14 @@
     </details>
   </section>
 
-  <footer class="text-center text-xs text-slate-500 pb-6">
-    Source: ESPNcricinfo · Last updated 14 Apr 2026 · Fairways Community 🏏
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div>IPL 2026 Fantasy Scoreboard · Updated daily at 1:30 PM CST</div>
+    <div>Data sourced from <span class="espn">ESPNcricinfo</span> · Season ends 25 May 2026</div>
   </footer>
 </div>
 
 <script>
-// ===== TEAM CONFIG =====
 const TEAMS = {
   CSK:  { name:"Chennai Super Kings",        color:"#facc15", bg:"#facc1520", text:"#facc15" },
   MI:   { name:"Mumbai Indians",             color:"#60a5fa", bg:"#60a5fa20", text:"#60a5fa" },
@@ -164,12 +310,14 @@ const TEAMS = {
   LSG:  { name:"Lucknow Super Giants",       color:"#06b6d4", bg:"#06b6d420", text:"#67e8f9" }
 };
 
-// ===== STATE =====
 let state = {
   updated: "After Match 22 · Updated 14 Apr 2026",
   matchesPlayed: 22,
   matchesTotal: 70,
-  nextMatch: "M23 · RCB vs LSG · 15 Apr 2026 · 7:30 PM IST · Chinnaswamy",
+  nextLabel: "NEXT MATCH · M23",
+  nextTitle: "RCB vs LSG",
+  nextSub:   "15 April 2026 · 7:30 PM IST · M. Chinnaswamy Stadium, Bengaluru",
+  nextRight: "Tomorrow",
   pointsTable: [
     { team:"RR",   M:5, W:4, L:1, NR:0, Pts:8, NRR:"+0.889" },
     { team:"PBKS", M:4, W:3, L:0, NR:1, Pts:7, NRR:"+0.720" },
@@ -178,9 +326,9 @@ let state = {
     { team:"DC",   M:4, W:2, L:2, NR:0, Pts:4, NRR:"+0.322" },
     { team:"GT",   M:4, W:2, L:2, NR:0, Pts:4, NRR:"-0.029" },
     { team:"LSG",  M:4, W:2, L:2, NR:0, Pts:4, NRR:"-0.427" },
-    { team:"CSK",  M:5, W:2, L:3, NR:0, Pts:4, NRR:"-1.150" },
+    { team:"CSK",  M:5, W:2, L:3, NR:0, Pts:4, NRR:"TBC" },
     { team:"MI",   M:4, W:1, L:3, NR:0, Pts:2, NRR:"-0.772" },
-    { team:"KKR",  M:5, W:0, L:4, NR:1, Pts:1, NRR:"-0.950" }
+    { team:"KKR",  M:5, W:0, L:4, NR:1, Pts:1, NRR:"TBC" }
   ],
   recentResults: [
     { num:"M22", date:"14 Apr", winner:"CSK", loser:"KKR", margin:"32 runs" },
@@ -210,7 +358,6 @@ let state = {
   ]
 };
 
-// ===== HELPERS =====
 function teamPts(code){ const r = state.pointsTable.find(t=>t.team===code); return r?r.Pts:0; }
 function teamBadge(code, withPts=true){
   const t = TEAMS[code]; if(!t) return code;
@@ -225,39 +372,33 @@ function medalIcon(rank){
   if(rank===3) return `<span class="text-2xl">🥉</span>`;
   return `<span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-white/5 text-slate-400 font-bold text-sm">${rank}</span>`;
 }
+function parseNRR(s){ const n = parseFloat(s); return isNaN(n) ? -999 : n; }
 
-// ===== RENDER =====
 function render(){
-  // updated line
   document.getElementById("updatedLine").textContent = state.updated;
-  document.getElementById("nextMatch").innerHTML =
-    `<span class="text-emerald-400 font-bold">▶ Next</span>
-     <span class="text-slate-100 font-semibold text-sm sm:text-base">${state.nextMatch}</span>`;
+  document.getElementById("nextLabelTop").textContent = state.nextLabel;
+  document.getElementById("nextTitle").textContent = state.nextTitle;
+  document.getElementById("nextSub").textContent = state.nextSub;
+  document.getElementById("nextRightLabel").textContent = state.nextRight;
 
-  // compute leaderboard
   const board = state.participants.map(p => ({
-    name: p.name,
-    teams: p.teams,
+    name: p.name, teams: p.teams,
     points: p.teams.reduce((s,t)=> s + teamPts(t), 0)
   })).sort((a,b)=> b.points - a.points);
 
-  // assign ranks (with ties)
   let rank = 0, prev = null;
   board.forEach((row, i) => {
     if (row.points !== prev) { rank = i + 1; prev = row.points; }
     row.rank = rank;
   });
 
-  // stats
   document.getElementById("statPlayed").textContent = state.matchesPlayed;
   document.getElementById("statRemaining").textContent = state.matchesTotal - state.matchesPlayed;
   document.getElementById("statLeaderName").textContent = board[0].name;
   document.getElementById("statLeaderPts").textContent = board[0].points;
-  // gap = leader - first non-tied score
   const second = board.find(r => r.points < board[0].points);
   document.getElementById("statGap").textContent = second ? (board[0].points - second.points) : 0;
 
-  // leaderboard
   const lb = document.getElementById("leaderboard");
   lb.innerHTML = board.map(row => {
     const isLeader = row.rank === 1;
@@ -281,7 +422,6 @@ function render(){
     </div>`;
   }).join("");
 
-  // recent results
   document.getElementById("recentResults").innerHTML = state.recentResults.map(r => `
     <div class="card rounded-2xl p-4">
       <p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">${r.num} · ${r.date}</p>
@@ -292,10 +432,10 @@ function render(){
     </div>
   `).join("");
 
-  // ipl table
   const sortedTable = [...state.pointsTable].sort((a,b) => {
     if (b.Pts !== a.Pts) return b.Pts - a.Pts;
-    return parseFloat(b.NRR) - parseFloat(a.NRR);
+    if (b.W   !== a.W)   return b.W   - a.W;
+    return a.M - b.M;
   });
   document.getElementById("iplTable").innerHTML = sortedTable.map((r,i)=>`
     <tr class="hover:bg-white/5">
@@ -305,39 +445,53 @@ function render(){
       <td class="px-3 py-3 text-center text-emerald-400 font-bold">${r.W}</td>
       <td class="px-3 py-3 text-center text-rose-400">${r.L}</td>
       <td class="px-3 py-3 text-center text-slate-400">${r.NR}</td>
-      <td class="px-3 py-3 text-center text-yellow-300 font-black text-base">${r.Pts}</td>
-      <td class="px-4 py-3 text-right text-slate-300 font-mono text-xs">${r.NRR}</td>
+      <td class="px-4 py-3 text-right text-yellow-300 font-black text-base">${r.Pts}</td>
     </tr>
   `).join("");
 
-  // editor
   document.getElementById("editTeams").innerHTML = state.pointsTable.map(t=>`
-    <div class="flex items-center gap-2 bg-black/30 rounded-lg px-2 py-1.5 border border-white/5">
+    <div class="flex items-center gap-2 bg-black/30 rounded-lg px-2 py-1.5 border border-white/5 flex-wrap">
       <span class="dot" style="background:${TEAMS[t.team].color};"></span>
       <span class="text-xs font-bold w-12">${t.team}</span>
-      <input type="number" value="${t.Pts}" data-team="${t.team}" class="edit-pts w-16 rounded px-2 py-0.5 text-sm border border-white/10" />
+      <label class="text-[10px] text-slate-400">Pts</label>
+      <input type="number" value="${t.Pts}" data-team="${t.team}" data-field="Pts" class="edit-field w-14 rounded px-2 py-0.5 text-sm border border-white/10" />
+      <label class="text-[10px] text-slate-400">M</label>
+      <input type="number" value="${t.M}" data-team="${t.team}" data-field="M" class="edit-field w-12 rounded px-2 py-0.5 text-sm border border-white/10" />
+      <label class="text-[10px] text-slate-400">W</label>
+      <input type="number" value="${t.W}" data-team="${t.team}" data-field="W" class="edit-field w-12 rounded px-2 py-0.5 text-sm border border-white/10" />
+      <label class="text-[10px] text-slate-400">L</label>
+      <input type="number" value="${t.L}" data-team="${t.team}" data-field="L" class="edit-field w-12 rounded px-2 py-0.5 text-sm border border-white/10" />
+      <label class="text-[10px] text-slate-400">NR</label>
+      <input type="number" value="${t.NR}" data-team="${t.team}" data-field="NR" class="edit-field w-12 rounded px-2 py-0.5 text-sm border border-white/10" />
     </div>
   `).join("");
   document.getElementById("editPlayed").value = state.matchesPlayed;
-  document.getElementById("editNext").value = state.nextMatch;
   document.getElementById("editUpdated").value = state.updated;
+  document.getElementById("editNextLabel").value = state.nextLabel;
+  document.getElementById("editNextTitle").value = state.nextTitle;
+  document.getElementById("editNextSub").value = state.nextSub;
+  document.getElementById("editNextRight").value = state.nextRight;
   document.getElementById("editResults").value = state.recentResults.map(r=>
     `${r.num}|${r.date}|${r.winner} beat ${r.loser} by ${r.margin}`
   ).join("\n");
 }
 
 function applyUpdate(){
-  // update team pts
-  document.querySelectorAll(".edit-pts").forEach(inp=>{
+  document.querySelectorAll(".edit-field").forEach(inp=>{
     const code = inp.dataset.team;
+    const field = inp.dataset.field;
     const row = state.pointsTable.find(t=>t.team===code);
-    if (row) row.Pts = parseInt(inp.value)||0;
+    if (!row) return;
+    if (field === "NRR") row.NRR = inp.value.trim();
+    else row[field] = parseInt(inp.value)||0;
   });
   state.matchesPlayed = parseInt(document.getElementById("editPlayed").value)||0;
-  state.nextMatch = document.getElementById("editNext").value;
-  state.updated = document.getElementById("editUpdated").value;
+  state.updated       = document.getElementById("editUpdated").value;
+  state.nextLabel     = document.getElementById("editNextLabel").value;
+  state.nextTitle     = document.getElementById("editNextTitle").value;
+  state.nextSub       = document.getElementById("editNextSub").value;
+  state.nextRight     = document.getElementById("editNextRight").value;
 
-  // parse results
   const lines = document.getElementById("editResults").value.split("\n").filter(l=>l.trim());
   state.recentResults = lines.slice(0,3).map(l=>{
     const parts = l.split("|");
@@ -350,6 +504,77 @@ function applyUpdate(){
 
   render();
   window.scrollTo({top:0, behavior:"smooth"});
+}
+
+// ===== CELEBRATION =====
+function playCelebration(){
+  const overlay = document.getElementById("celebration");
+  if (!overlay) return;
+  const colors = ["#facc15","#fb923c","#ef4444","#22d3ee","#a78bfa","#34d399","#ec4899"];
+  const W = window.innerWidth, H = window.innerHeight;
+
+  function burst(x, y){
+    for (let i=0; i<22; i++){
+      const s = document.createElement("div");
+      s.className = "spark";
+      const angle = (Math.PI*2) * (i/22);
+      const dist = 60 + Math.random()*80;
+      s.style.setProperty("--dx", Math.cos(angle)*dist + "px");
+      s.style.setProperty("--dy", Math.sin(angle)*dist + "px");
+      s.style.left = x + "px";
+      s.style.top  = y + "px";
+      const col = colors[Math.floor(Math.random()*colors.length)];
+      s.style.background = col;
+      s.style.boxShadow = `0 0 10px ${col}`;
+      overlay.appendChild(s);
+      setTimeout(()=>s.remove(), 1400);
+    }
+  }
+  function launch(){
+    const startX = Math.random()*W;
+    const f = document.createElement("div");
+    f.className = "firework";
+    f.style.left = startX + "px";
+    f.style.top  = (H*0.65) + "px";
+    const col = colors[Math.floor(Math.random()*colors.length)];
+    f.style.background = col;
+    f.style.boxShadow = `0 0 14px ${col}`;
+    overlay.appendChild(f);
+    setTimeout(()=>{
+      burst(startX, H*0.3 + Math.random()*60);
+      f.remove();
+    }, 850);
+  }
+  for (let i=0; i<10; i++) setTimeout(launch, i*220);
+
+  setTimeout(()=>{
+    const bat = document.createElement("div");
+    bat.className = "bat";
+    overlay.appendChild(bat);
+    const ball = document.createElement("div");
+    ball.className = "ball";
+    overlay.appendChild(ball);
+    setTimeout(()=> burst(W*0.18, H*0.62), 250);
+    const six = document.createElement("div");
+    six.className = "six-text";
+    six.textContent = "SIX!";
+    overlay.appendChild(six);
+  }, 400);
+
+  setTimeout(()=> overlay.classList.add("fade"), 4200);
+  setTimeout(()=> overlay.remove(), 5200);
+}
+
+try {
+  if (!sessionStorage.getItem("fairwaysCelebrated")) {
+    sessionStorage.setItem("fairwaysCelebrated","1");
+    window.addEventListener("load", playCelebration);
+  } else {
+    const ov = document.getElementById("celebration");
+    if (ov) ov.remove();
+  }
+} catch(e) {
+  window.addEventListener("load", playCelebration);
 }
 
 render();

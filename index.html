@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fairways IPL 2026 Fantasy</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; }
+  .glow { box-shadow: 0 0 40px rgba(250, 204, 21, 0.18); }
+  .leader-row { background: linear-gradient(90deg, rgba(250,204,21,0.12), rgba(250,204,21,0.02)); border-left: 4px solid #facc15; }
+  .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); }
+  .chip { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 9999px; font-size: 11px; font-weight: 700; letter-spacing: .3px; }
+  .dot { width: 8px; height: 8px; border-radius: 9999px; display: inline-block; }
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: .55; } }
+  .scrollbar::-webkit-scrollbar { height: 8px; width: 8px; }
+  .scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+  details > summary { list-style: none; cursor: pointer; }
+  details > summary::-webkit-details-marker { display: none; }
+  input[type="number"], textarea { background: rgba(0,0,0,0.35); }
+</style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+<div class="max-w-5xl mx-auto px-4 py-6 sm:py-10">
+
+  <!-- HEADER -->
+  <header class="rounded-3xl p-6 sm:p-8 mb-6 relative overflow-hidden"
+    style="background: radial-gradient(120% 120% at 0% 0%, #1e3a8a 0%, #0f172a 60%, #020617 100%);">
+    <div class="flex items-start justify-between gap-4 flex-wrap">
+      <div>
+        <p class="text-xs sm:text-sm font-bold tracking-[0.25em] text-orange-400">IPL 2026 · FANTASY</p>
+        <h1 class="text-3xl sm:text-5xl font-black mt-1 leading-tight">
+          Fairways IPL 2026 Fantasy <span class="inline-block">🏏</span>
+        </h1>
+        <p class="text-slate-300 text-sm mt-2" id="updatedLine">After Match 22 · Updated 14 Apr 2026</p>
+      </div>
+      <div class="chip pulse" style="background:rgba(239,68,68,.15); color:#fca5a5; border:1px solid rgba(239,68,68,.35);">
+        <span class="dot" style="background:#ef4444;"></span> LIVE
+      </div>
+    </div>
+
+    <!-- NEXT MATCH -->
+    <div id="nextMatch" class="mt-5 inline-flex items-center gap-3 rounded-full px-4 py-2"
+      style="background:rgba(34,197,94,.12); border:1px solid rgba(34,197,94,.35);">
+      <span class="text-emerald-400 font-bold">▶ Next</span>
+      <span class="text-slate-100 font-semibold text-sm sm:text-base">M23 · RCB vs LSG · 15 Apr 2026 · 7:30 PM IST · Chinnaswamy</span>
+    </div>
+  </header>
+
+  <!-- SUMMARY CARDS -->
+  <section class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-8">
+    <div class="card rounded-2xl p-4">
+      <p class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Matches Played</p>
+      <p class="text-3xl font-black mt-1" id="statPlayed">22</p>
+      <p class="text-xs text-slate-500 mt-1">of 70 league</p>
+    </div>
+    <div class="card rounded-2xl p-4">
+      <p class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Matches Remaining</p>
+      <p class="text-3xl font-black mt-1" id="statRemaining">48</p>
+      <p class="text-xs text-slate-500 mt-1">league stage</p>
+    </div>
+    <div class="card rounded-2xl p-4 glow" style="background: linear-gradient(135deg, rgba(250,204,21,0.12), rgba(255,255,255,0.03));">
+      <p class="text-[11px] uppercase tracking-wider text-yellow-400 font-bold">Current Leader</p>
+      <p class="text-xl font-black mt-1 truncate" id="statLeaderName">Sandeep</p>
+      <p class="text-xs text-yellow-300 mt-1"><span id="statLeaderPts">23</span> pts 🏆</p>
+    </div>
+    <div class="card rounded-2xl p-4">
+      <p class="text-[11px] uppercase tracking-wider text-slate-400 font-bold">Winning Gap</p>
+      <p class="text-3xl font-black mt-1" id="statGap">2</p>
+      <p class="text-xs text-slate-500 mt-1">over 2nd place</p>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD -->
+  <section class="mb-8">
+    <h2 class="text-xs uppercase tracking-[0.25em] text-slate-400 font-bold mb-3">Fantasy Leaderboard</h2>
+    <div id="leaderboard" class="space-y-2"></div>
+  </section>
+
+  <!-- RECENT RESULTS -->
+  <section class="mb-8">
+    <h2 class="text-xs uppercase tracking-[0.25em] text-slate-400 font-bold mb-3">Recent Results</h2>
+    <div id="recentResults" class="grid sm:grid-cols-3 gap-3"></div>
+  </section>
+
+  <!-- IPL POINTS TABLE -->
+  <section class="mb-8">
+    <h2 class="text-xs uppercase tracking-[0.25em] text-slate-400 font-bold mb-3">Official IPL 2026 Points Table</h2>
+    <div class="card rounded-2xl overflow-hidden">
+      <div class="overflow-x-auto scrollbar">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-900/60 text-[11px] uppercase tracking-wider text-slate-400">
+            <tr>
+              <th class="text-left px-4 py-3">#</th>
+              <th class="text-left px-4 py-3">Team</th>
+              <th class="text-center px-3 py-3">M</th>
+              <th class="text-center px-3 py-3">W</th>
+              <th class="text-center px-3 py-3">L</th>
+              <th class="text-center px-3 py-3">NR</th>
+              <th class="text-center px-3 py-3 text-yellow-300">Pts</th>
+              <th class="text-right px-4 py-3">NRR</th>
+            </tr>
+          </thead>
+          <tbody id="iplTable" class="divide-y divide-white/5"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- UPDATE DATA -->
+  <section class="mb-10">
+    <details class="card rounded-2xl">
+      <summary class="px-5 py-4 flex items-center justify-between">
+        <span class="font-bold">⚙️ Update Data</span>
+        <span class="text-xs text-slate-400">Edit team points → leaderboard auto-recalculates</span>
+      </summary>
+      <div class="px-5 pb-5 pt-2 space-y-4">
+        <div>
+          <p class="text-xs uppercase tracking-wider text-slate-400 font-bold mb-2">Team Points</p>
+          <div id="editTeams" class="grid grid-cols-2 sm:grid-cols-5 gap-2"></div>
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Matches Played</label>
+          <input id="editPlayed" type="number" class="w-32 ml-3 rounded-lg px-3 py-1 border border-white/10" />
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Next Match (text)</label>
+          <input id="editNext" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Recent Results (one per line: "Team1 beat Team2 by X runs/wkts")</label>
+          <textarea id="editResults" rows="4" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10 font-mono text-xs"></textarea>
+        </div>
+        <div>
+          <label class="text-xs uppercase tracking-wider text-slate-400 font-bold">Updated Line</label>
+          <input id="editUpdated" type="text" class="w-full mt-1 rounded-lg px-3 py-2 border border-white/10" />
+        </div>
+        <button onclick="applyUpdate()" class="px-5 py-2 rounded-xl bg-yellow-400 text-slate-900 font-bold hover:bg-yellow-300 transition">
+          🔄 Recalculate & Update Dashboard
+        </button>
+      </div>
+    </details>
+  </section>
+
+  <footer class="text-center text-xs text-slate-500 pb-6">
+    Source: ESPNcricinfo · Last updated 14 Apr 2026 · Fairways Community 🏏
+  </footer>
+</div>
+
+<script>
+// ===== TEAM CONFIG =====
+const TEAMS = {
+  CSK:  { name:"Chennai Super Kings",        color:"#facc15", bg:"#facc1520", text:"#facc15" },
+  MI:   { name:"Mumbai Indians",             color:"#60a5fa", bg:"#60a5fa20", text:"#60a5fa" },
+  RCB:  { name:"Royal Challengers Bengaluru",color:"#ef4444", bg:"#ef444420", text:"#ef4444" },
+  KKR:  { name:"Kolkata Knight Riders",      color:"#7c3aed", bg:"#7c3aed20", text:"#a78bfa" },
+  SRH:  { name:"Sunrisers Hyderabad",        color:"#fb923c", bg:"#fb923c20", text:"#fb923c" },
+  DC:   { name:"Delhi Capitals",             color:"#3b82f6", bg:"#3b82f620", text:"#60a5fa" },
+  PBKS: { name:"Punjab Kings",               color:"#dc2626", bg:"#dc262620", text:"#f87171" },
+  RR:   { name:"Rajasthan Royals",           color:"#ec4899", bg:"#ec489920", text:"#f472b6" },
+  GT:   { name:"Gujarat Titans",             color:"#14b8a6", bg:"#14b8a620", text:"#5eead4" },
+  LSG:  { name:"Lucknow Super Giants",       color:"#06b6d4", bg:"#06b6d420", text:"#67e8f9" }
+};
+
+// ===== STATE =====
+let state = {
+  updated: "After Match 22 · Updated 14 Apr 2026",
+  matchesPlayed: 22,
+  matchesTotal: 70,
+  nextMatch: "M23 · RCB vs LSG · 15 Apr 2026 · 7:30 PM IST · Chinnaswamy",
+  pointsTable: [
+    { team:"RR",   M:5, W:4, L:1, NR:0, Pts:8, NRR:"+0.889" },
+    { team:"PBKS", M:4, W:3, L:0, NR:1, Pts:7, NRR:"+0.720" },
+    { team:"RCB",  M:4, W:3, L:1, NR:0, Pts:6, NRR:"+1.148" },
+    { team:"SRH",  M:5, W:2, L:3, NR:0, Pts:4, NRR:"+0.576" },
+    { team:"DC",   M:4, W:2, L:2, NR:0, Pts:4, NRR:"+0.322" },
+    { team:"GT",   M:4, W:2, L:2, NR:0, Pts:4, NRR:"-0.029" },
+    { team:"LSG",  M:4, W:2, L:2, NR:0, Pts:4, NRR:"-0.427" },
+    { team:"CSK",  M:5, W:2, L:3, NR:0, Pts:4, NRR:"-1.150" },
+    { team:"MI",   M:4, W:1, L:3, NR:0, Pts:2, NRR:"-0.772" },
+    { team:"KKR",  M:5, W:0, L:4, NR:1, Pts:1, NRR:"-0.950" }
+  ],
+  recentResults: [
+    { num:"M22", date:"14 Apr", winner:"CSK", loser:"KKR", margin:"32 runs" },
+    { num:"M21", date:"13 Apr", winner:"SRH", loser:"RR",  margin:"57 runs" },
+    { num:"M20", date:"12 Apr", winner:"RCB", loser:"MI",  margin:"18 runs" }
+  ],
+  participants: [
+    { name:"Jeevan",   teams:["MI","RCB","GT","PBKS"] },
+    { name:"Aravind",  teams:["SRH","CSK","MI","RCB"] },
+    { name:"Mani",     teams:["RR","GT","MI","RCB"] },
+    { name:"Anil",     teams:["RCB","SRH","MI","CSK"] },
+    { name:"Dinesh",   teams:["CSK","MI","RCB","PBKS"] },
+    { name:"Anand",    teams:["CSK","SRH","RCB","PBKS"] },
+    { name:"Abhi",     teams:["MI","RCB","PBKS","GT"] },
+    { name:"Satish",   teams:["MI","GT","RCB","SRH"] },
+    { name:"Hrishi",   teams:["MI","GT","KKR","RCB"] },
+    { name:"Surendra", teams:["KKR","SRH","RR","MI"] },
+    { name:"Srini G",  teams:["MI","RCB","CSK","SRH"] },
+    { name:"Hemang",   teams:["MI","RCB","CSK","SRH"] },
+    { name:"Wasim",    teams:["RCB","KKR","DC","RR"] },
+    { name:"Abdul",    teams:["MI","RCB","GT","SRH"] },
+    { name:"Vinod",    teams:["RCB","DC","KKR","CSK"] },
+    { name:"Viral",    teams:["MI","RCB","CSK","KKR"] },
+    { name:"Sandeep",  teams:["MI","RCB","PBKS","RR"] },
+    { name:"Raghuram", teams:["MI","SRH","CSK","PBKS"] },
+    { name:"Satyajit", teams:["MI","CSK","GT","RR"] }
+  ]
+};
+
+// ===== HELPERS =====
+function teamPts(code){ const r = state.pointsTable.find(t=>t.team===code); return r?r.Pts:0; }
+function teamBadge(code, withPts=true){
+  const t = TEAMS[code]; if(!t) return code;
+  const pts = teamPts(code);
+  return `<span class="chip" style="background:${t.bg}; color:${t.text}; border:1px solid ${t.color}55;">
+    <span class="dot" style="background:${t.color};"></span>${code}${withPts?` <span style="background:rgba(0,0,0,.35); padding:1px 6px; border-radius:9999px; margin-left:2px;">${pts}</span>`:""}
+  </span>`;
+}
+function medalIcon(rank){
+  if(rank===1) return `<span class="text-2xl">🥇</span>`;
+  if(rank===2) return `<span class="text-2xl">🥈</span>`;
+  if(rank===3) return `<span class="text-2xl">🥉</span>`;
+  return `<span class="inline-flex items-center justify-center w-7 h-7 rounded-lg bg-white/5 text-slate-400 font-bold text-sm">${rank}</span>`;
+}
+
+// ===== RENDER =====
+function render(){
+  // updated line
+  document.getElementById("updatedLine").textContent = state.updated;
+  document.getElementById("nextMatch").innerHTML =
+    `<span class="text-emerald-400 font-bold">▶ Next</span>
+     <span class="text-slate-100 font-semibold text-sm sm:text-base">${state.nextMatch}</span>`;
+
+  // compute leaderboard
+  const board = state.participants.map(p => ({
+    name: p.name,
+    teams: p.teams,
+    points: p.teams.reduce((s,t)=> s + teamPts(t), 0)
+  })).sort((a,b)=> b.points - a.points);
+
+  // assign ranks (with ties)
+  let rank = 0, prev = null;
+  board.forEach((row, i) => {
+    if (row.points !== prev) { rank = i + 1; prev = row.points; }
+    row.rank = rank;
+  });
+
+  // stats
+  document.getElementById("statPlayed").textContent = state.matchesPlayed;
+  document.getElementById("statRemaining").textContent = state.matchesTotal - state.matchesPlayed;
+  document.getElementById("statLeaderName").textContent = board[0].name;
+  document.getElementById("statLeaderPts").textContent = board[0].points;
+  // gap = leader - first non-tied score
+  const second = board.find(r => r.points < board[0].points);
+  document.getElementById("statGap").textContent = second ? (board[0].points - second.points) : 0;
+
+  // leaderboard
+  const lb = document.getElementById("leaderboard");
+  lb.innerHTML = board.map(row => {
+    const isLeader = row.rank === 1;
+    return `
+    <div class="card rounded-2xl p-4 ${isLeader?'leader-row':''}">
+      <div class="flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3 min-w-0 flex-1">
+          ${medalIcon(row.rank)}
+          <div class="min-w-0">
+            <p class="font-bold text-base truncate ${isLeader?'text-yellow-300':''}">${row.name}</p>
+            <div class="flex flex-wrap gap-1.5 mt-1.5">
+              ${row.teams.map(t=>teamBadge(t,true)).join("")}
+            </div>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-3xl font-black ${isLeader?'text-yellow-300':'text-slate-100'}">${row.points}</p>
+          <p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">pts</p>
+        </div>
+      </div>
+    </div>`;
+  }).join("");
+
+  // recent results
+  document.getElementById("recentResults").innerHTML = state.recentResults.map(r => `
+    <div class="card rounded-2xl p-4">
+      <p class="text-[10px] uppercase tracking-wider text-slate-500 font-bold">${r.num} · ${r.date}</p>
+      <div class="flex items-center gap-2 mt-2 flex-wrap">
+        ${teamBadge(r.winner,false)} <span class="text-xs text-emerald-400 font-bold">beat</span> ${teamBadge(r.loser,false)}
+      </div>
+      <p class="text-xs text-slate-400 mt-2">by ${r.margin}</p>
+    </div>
+  `).join("");
+
+  // ipl table
+  const sortedTable = [...state.pointsTable].sort((a,b) => {
+    if (b.Pts !== a.Pts) return b.Pts - a.Pts;
+    return parseFloat(b.NRR) - parseFloat(a.NRR);
+  });
+  document.getElementById("iplTable").innerHTML = sortedTable.map((r,i)=>`
+    <tr class="hover:bg-white/5">
+      <td class="px-4 py-3 text-slate-400 font-bold">${i+1}</td>
+      <td class="px-4 py-3">${teamBadge(r.team,false)} <span class="text-slate-400 text-xs ml-1 hidden sm:inline">${TEAMS[r.team].name}</span></td>
+      <td class="px-3 py-3 text-center">${r.M}</td>
+      <td class="px-3 py-3 text-center text-emerald-400 font-bold">${r.W}</td>
+      <td class="px-3 py-3 text-center text-rose-400">${r.L}</td>
+      <td class="px-3 py-3 text-center text-slate-400">${r.NR}</td>
+      <td class="px-3 py-3 text-center text-yellow-300 font-black text-base">${r.Pts}</td>
+      <td class="px-4 py-3 text-right text-slate-300 font-mono text-xs">${r.NRR}</td>
+    </tr>
+  `).join("");
+
+  // editor
+  document.getElementById("editTeams").innerHTML = state.pointsTable.map(t=>`
+    <div class="flex items-center gap-2 bg-black/30 rounded-lg px-2 py-1.5 border border-white/5">
+      <span class="dot" style="background:${TEAMS[t.team].color};"></span>
+      <span class="text-xs font-bold w-12">${t.team}</span>
+      <input type="number" value="${t.Pts}" data-team="${t.team}" class="edit-pts w-16 rounded px-2 py-0.5 text-sm border border-white/10" />
+    </div>
+  `).join("");
+  document.getElementById("editPlayed").value = state.matchesPlayed;
+  document.getElementById("editNext").value = state.nextMatch;
+  document.getElementById("editUpdated").value = state.updated;
+  document.getElementById("editResults").value = state.recentResults.map(r=>
+    `${r.num}|${r.date}|${r.winner} beat ${r.loser} by ${r.margin}`
+  ).join("\n");
+}
+
+function applyUpdate(){
+  // update team pts
+  document.querySelectorAll(".edit-pts").forEach(inp=>{
+    const code = inp.dataset.team;
+    const row = state.pointsTable.find(t=>t.team===code);
+    if (row) row.Pts = parseInt(inp.value)||0;
+  });
+  state.matchesPlayed = parseInt(document.getElementById("editPlayed").value)||0;
+  state.nextMatch = document.getElementById("editNext").value;
+  state.updated = document.getElementById("editUpdated").value;
+
+  // parse results
+  const lines = document.getElementById("editResults").value.split("\n").filter(l=>l.trim());
+  state.recentResults = lines.slice(0,3).map(l=>{
+    const parts = l.split("|");
+    if (parts.length>=3) {
+      const m = parts[2].match(/(\w+)\s+beat\s+(\w+)\s+by\s+(.+)/i);
+      if (m) return { num:parts[0].trim(), date:parts[1].trim(), winner:m[1].toUpperCase(), loser:m[2].toUpperCase(), margin:m[3].trim() };
+    }
+    return null;
+  }).filter(Boolean);
+
+  render();
+  window.scrollTo({top:0, behavior:"smooth"});
+}
+
+render();
+</script>
+</body>
+</html>

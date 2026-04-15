@@ -72,7 +72,7 @@
   }
   .site-footer .espn { color: #fb923c; font-weight: 600; }
 
-  /* ==== CELEBRATION OVERLAY ==== */
+  /* ==== CELEBRATION OVERLAY (fireworks — temporary, 5-6s) ==== */
   #celebration {
     position: fixed; inset: 0; z-index: 9999; pointer-events: none;
     overflow: hidden;
@@ -80,67 +80,81 @@
   }
   #celebration.fade { opacity: 0; }
 
-  /* Fireworks at top */
+  /* Bigger, brighter rising trail */
   .firework-trail {
-    position: absolute; width: 5px; height: 5px; border-radius: 50%;
-    animation: firework-rise 900ms cubic-bezier(.2,.7,.3,1) forwards;
+    position: absolute; width: 7px; height: 7px; border-radius: 50%;
+    animation: firework-rise 1000ms cubic-bezier(.2,.7,.3,1) forwards;
+    filter: drop-shadow(0 0 8px currentColor);
   }
   @keyframes firework-rise {
     0% { transform: translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateY(-260px) scale(0.4); opacity: 0.9; }
+    100% { transform: translateY(-320px) scale(0.5); opacity: 0.95; }
   }
+  /* Bigger sparks, brighter glow */
   .spark {
-    position: absolute; width: 5px; height: 5px; border-radius: 50%;
-    animation: spark-out 1200ms cubic-bezier(.1,.8,.3,1) forwards;
+    position: absolute; width: 7px; height: 7px; border-radius: 50%;
+    animation: spark-out 1600ms cubic-bezier(.1,.8,.3,1) forwards;
   }
   @keyframes spark-out {
-    0% { transform: translate(0,0) scale(1); opacity: 1; }
-    100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
+    0%   { transform: translate(0,0) scale(1.2); opacity: 1; }
+    70%  { opacity: 0.9; }
+    100% { transform: translate(var(--dx), var(--dy)) scale(0.15); opacity: 0; }
   }
 
-  /* Bouncing cricket ball */
-  .cricket-ball {
-    position: absolute;
-    left: 6vw;
-    bottom: 14px;
-    width: 26px; height: 26px;
-    border-radius: 50%;
-    background:
-      radial-gradient(circle at 30% 30%, #fca5a5 0%, #dc2626 45%, #7f1d1d 100%);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.35), 0 0 10px rgba(220,38,38,0.55);
-    animation: ball-journey 5200ms cubic-bezier(.4,0,.6,1) forwards;
-    will-change: transform, left, bottom;
+  /* ==== YELLOW LABRADOR PUPPY (permanent, hopping L↔R) ==== */
+  #puppy {
+    position: fixed;
+    left: 0;
+    bottom: 8px;
+    z-index: 40;             /* above body content, below celebration */
+    pointer-events: none;
+    font-size: 42px;
+    line-height: 1;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+    animation: puppy-travel 16s ease-in-out infinite;
+    transform-origin: center bottom;
+    will-change: left, transform;
+    user-select: none;
   }
-  /* White seam line via pseudo */
-  .cricket-ball::before {
-    content: "";
-    position: absolute;
-    left: 50%; top: 50%;
-    width: 80%; height: 2px;
-    background: rgba(255,255,255,0.75);
-    transform: translate(-50%, -50%);
-    border-radius: 2px;
+  /* Left-to-right then back; flips horizontally on return leg */
+  @keyframes puppy-travel {
+    0%   { left: 2vw;  transform: scaleX(1); }
+    48%  { left: calc(100vw - 70px); transform: scaleX(1); }
+    50%  { left: calc(100vw - 70px); transform: scaleX(-1); }
+    98%  { left: 2vw;  transform: scaleX(-1); }
+    100% { left: 2vw;  transform: scaleX(1); }
   }
-  @keyframes ball-journey {
-    /* Bounce 1 — highest */
-    0%   { left: 6vw;  bottom: 14px; transform: rotate(0deg); }
-    6%   { left: 10vw; bottom: 140px; transform: rotate(220deg); }
-    14%  { left: 16vw; bottom: 14px;  transform: rotate(500deg); }
-    /* Bounce 2 — lower */
-    20%  { left: 22vw; bottom: 85px;  transform: rotate(740deg); }
-    28%  { left: 30vw; bottom: 14px;  transform: rotate(1020deg); }
-    /* Bounce 3 — lowest */
-    34%  { left: 38vw; bottom: 45px;  transform: rotate(1260deg); }
-    42%  { left: 46vw; bottom: 14px;  transform: rotate(1520deg); }
-    /* Roll to bottom-right */
-    85%  { left: 90vw; bottom: 14px;  transform: rotate(3000deg); }
-    100% { left: 90vw; bottom: 14px;  transform: rotate(3100deg); opacity: 1; }
+  /* Hop: lift + slight squash. Layered on top of travel via nested span. */
+  #puppy .puppy-inner {
+    display: inline-block;
+    animation: puppy-hop-inner 0.55s ease-in-out infinite;
+    transform-origin: center bottom;
+  }
+  @keyframes puppy-hop-inner {
+    0%,100% { transform: translateY(0) scaleY(1); }
+    40%     { transform: translateY(-22px) scaleY(1.05); }
+    80%     { transform: translateY(0) scaleY(0.92); }
+  }
+  @media (max-width: 480px) {
+    #puppy { font-size: 34px; }
+    @keyframes puppy-travel {
+      0%   { left: 2vw;  transform: scaleX(1); }
+      48%  { left: calc(100vw - 56px); transform: scaleX(1); }
+      50%  { left: calc(100vw - 56px); transform: scaleX(-1); }
+      98%  { left: 2vw;  transform: scaleX(-1); }
+      100% { left: 2vw;  transform: scaleX(1); }
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #puppy, #puppy .puppy-inner { animation: none; }
+    #celebration { display: none; }
   }
 </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen">
 
 <div id="celebration" aria-hidden="true"></div>
+<div id="puppy" aria-hidden="true" title="Fairways mascot"><span class="puppy-inner">🐶</span></div>
 
 <div class="max-w-5xl mx-auto px-4 py-6 sm:py-10">
 
@@ -501,67 +515,56 @@ function applyUpdate(){
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
-// ===== CELEBRATION (fireworks + bouncing ball) =====
+// ===== CELEBRATION (prominent fireworks, 5–6s, no puppy here) =====
 function playCelebration(){
   const overlay = document.getElementById("celebration");
   if (!overlay) return;
-  const colors = ["#facc15","#fb923c","#ef4444","#22d3ee","#a78bfa","#34d399","#ec4899","#f472b6"];
+  const colors = [
+    "#facc15","#fb923c","#ef4444","#22d3ee","#a78bfa",
+    "#34d399","#ec4899","#f472b6","#f87171","#60a5fa","#fde047"
+  ];
+  const isMobile = window.innerWidth < 480;
   const W = window.innerWidth;
-  const TOP_ZONE = Math.min(260, window.innerHeight * 0.35); // keep above header content
+  const TOP_ZONE = Math.min(320, window.innerHeight * 0.45); // top + upper center
 
   function burst(x, y){
-    const count = window.innerWidth < 480 ? 14 : 22;
+    const count = isMobile ? 28 : 46; // more particles per burst
     for (let i=0; i<count; i++){
       const s = document.createElement("div");
       s.className = "spark";
-      const angle = (Math.PI*2) * (i/count);
-      const dist = 55 + Math.random()*70;
+      const angle = (Math.PI*2) * (i/count) + Math.random()*0.12;
+      const dist = 90 + Math.random()*130; // bigger radius
       s.style.setProperty("--dx", Math.cos(angle)*dist + "px");
       s.style.setProperty("--dy", Math.sin(angle)*dist + "px");
       s.style.left = x + "px";
       s.style.top  = y + "px";
       const col = colors[Math.floor(Math.random()*colors.length)];
       s.style.background = col;
-      s.style.boxShadow = `0 0 10px ${col}`;
+      s.style.boxShadow = `0 0 18px ${col}, 0 0 36px ${col}`;
       overlay.appendChild(s);
-      setTimeout(()=>s.remove(), 1400);
+      setTimeout(()=>s.remove(), 1800);
     }
+    // Inner core flash
+    const flash = document.createElement("div");
+    flash.className = "spark";
+    flash.style.left = x + "px";
+    flash.style.top = y + "px";
+    flash.style.width = "14px"; flash.style.height = "14px";
+    flash.style.background = "#fff";
+    flash.style.boxShadow = "0 0 40px #fff, 0 0 70px #facc15";
+    flash.style.setProperty("--dx","0px");
+    flash.style.setProperty("--dy","0px");
+    overlay.appendChild(flash);
+    setTimeout(()=>flash.remove(), 600);
   }
   function launch(){
-    const startX = 40 + Math.random()*(W-80);
-    const peakY  = 30 + Math.random()*(TOP_ZONE - 30);
+    // Spread across full width; bias some toward center
+    const centerBias = Math.random() < 0.45;
+    const startX = centerBias
+      ? (W*0.3 + Math.random()*W*0.4)
+      : (40 + Math.random()*(W-80));
+    const peakY  = 40 + Math.random()*(TOP_ZONE - 40);
     const f = document.createElement("div");
     f.className = "firework-trail";
     f.style.left = startX + "px";
-    f.style.top  = (peakY + 260) + "px"; // rises up ~260px (matches keyframe)
-    const col = colors[Math.floor(Math.random()*colors.length)];
-    f.style.background = col;
-    f.style.boxShadow = `0 0 14px ${col}`;
-    overlay.appendChild(f);
-    setTimeout(()=>{
-      burst(startX, peakY);
-      f.remove();
-    }, 850);
-  }
-  // 10 fireworks staggered over ~2.2s; secondary wave at 2.6s
-  const waves = window.innerWidth < 480 ? 7 : 10;
-  for (let i=0; i<waves; i++) setTimeout(launch, i*230);
-  for (let i=0; i<Math.floor(waves/2); i++) setTimeout(launch, 2600 + i*200);
-
-  // bouncing cricket ball
-  const ball = document.createElement("div");
-  ball.className = "cricket-ball";
-  overlay.appendChild(ball);
-
-  // fade and remove
-  setTimeout(()=> overlay.classList.add("fade"), 5200);
-  setTimeout(()=> { if (overlay.parentNode) overlay.remove(); }, 6200);
-}
-
-window.addEventListener("load", playCelebration);
-
-render();
-</script>
-</body>
-</html>
-                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+    f.styl

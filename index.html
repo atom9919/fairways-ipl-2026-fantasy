@@ -76,16 +76,18 @@
   #celebration {
     position: fixed; inset: 0; z-index: 9999; pointer-events: none;
     overflow: hidden;
-    transition: opacity 800ms ease;
+    transition: opacity 900ms ease;
   }
   #celebration.fade { opacity: 0; }
-  .firework {
-    position: absolute; width: 6px; height: 6px; border-radius: 50%;
+
+  /* Fireworks at top */
+  .firework-trail {
+    position: absolute; width: 5px; height: 5px; border-radius: 50%;
     animation: firework-rise 900ms cubic-bezier(.2,.7,.3,1) forwards;
   }
   @keyframes firework-rise {
     0% { transform: translateY(0) scale(1); opacity: 1; }
-    100% { transform: translateY(-340px) scale(0.4); opacity: 0.9; }
+    100% { transform: translateY(-260px) scale(0.4); opacity: 0.9; }
   }
   .spark {
     position: absolute; width: 5px; height: 5px; border-radius: 50%;
@@ -95,51 +97,44 @@
     0% { transform: translate(0,0) scale(1); opacity: 1; }
     100% { transform: translate(var(--dx), var(--dy)) scale(0.2); opacity: 0; }
   }
-  .six-text {
+
+  /* Bouncing cricket ball */
+  .cricket-ball {
     position: absolute;
-    left: 50%; top: 38%;
-    transform: translate(-50%, -50%) scale(0);
-    font-family: 'Impact', 'Arial Black', sans-serif;
-    font-size: clamp(80px, 18vw, 180px);
-    font-weight: 900;
-    color: #fff;
-    -webkit-text-stroke: 3px #fb923c;
-    text-shadow: 0 0 30px rgba(251,146,60,.9), 0 0 60px rgba(250,204,21,.6);
-    letter-spacing: 0.05em;
-    animation: six-pop 1800ms cubic-bezier(.2,1.6,.3,1) forwards;
-  }
-  @keyframes six-pop {
-    0% { transform: translate(-50%,-50%) scale(0) rotate(-15deg); opacity: 0; }
-    30% { transform: translate(-50%,-50%) scale(1.25) rotate(5deg); opacity: 1; }
-    55% { transform: translate(-50%,-50%) scale(1) rotate(0deg); opacity: 1; }
-    100% { transform: translate(-50%,-50%) scale(1.05) rotate(0deg); opacity: 1; }
-  }
-  .ball {
-    position: absolute;
-    left: -60px; top: 55%;
-    width: 28px; height: 28px;
+    left: 6vw;
+    bottom: 14px;
+    width: 26px; height: 26px;
     border-radius: 50%;
-    background: radial-gradient(circle at 30% 30%, #fef2f2 0%, #dc2626 45%, #7f1d1d 100%);
-    box-shadow: 0 0 14px rgba(220,38,38,.7);
-    animation: ball-fly 1100ms cubic-bezier(.25,.8,.2,1) forwards;
+    background:
+      radial-gradient(circle at 30% 30%, #fca5a5 0%, #dc2626 45%, #7f1d1d 100%);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.35), 0 0 10px rgba(220,38,38,0.55);
+    animation: ball-journey 5200ms cubic-bezier(.4,0,.6,1) forwards;
+    will-change: transform, left, bottom;
   }
-  @keyframes ball-fly {
-    0% { left: -60px; top: 85%; transform: rotate(0deg) scale(0.7); }
-    100% { left: 110%; top: 10%; transform: rotate(1800deg) scale(1.1); }
+  /* White seam line via pseudo */
+  .cricket-ball::before {
+    content: "";
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 80%; height: 2px;
+    background: rgba(255,255,255,0.75);
+    transform: translate(-50%, -50%);
+    border-radius: 2px;
   }
-  .bat {
-    position: absolute; left: 8%; top: 62%;
-    width: 70px; height: 12px; background: linear-gradient(90deg,#d97706,#f59e0b);
-    border-radius: 4px;
-    transform-origin: right center;
-    transform: rotate(20deg) scale(0);
-    animation: bat-swing 800ms cubic-bezier(.2,.9,.3,1) forwards;
-  }
-  @keyframes bat-swing {
-    0% { transform: rotate(80deg) scale(0); opacity: 0; }
-    20% { transform: rotate(70deg) scale(1); opacity: 1; }
-    60% { transform: rotate(-40deg) scale(1); opacity: 1; }
-    100% { transform: rotate(-60deg) scale(0.9); opacity: 0; }
+  @keyframes ball-journey {
+    /* Bounce 1 — highest */
+    0%   { left: 6vw;  bottom: 14px; transform: rotate(0deg); }
+    6%   { left: 10vw; bottom: 140px; transform: rotate(220deg); }
+    14%  { left: 16vw; bottom: 14px;  transform: rotate(500deg); }
+    /* Bounce 2 — lower */
+    20%  { left: 22vw; bottom: 85px;  transform: rotate(740deg); }
+    28%  { left: 30vw; bottom: 14px;  transform: rotate(1020deg); }
+    /* Bounce 3 — lowest */
+    34%  { left: 38vw; bottom: 45px;  transform: rotate(1260deg); }
+    42%  { left: 46vw; bottom: 14px;  transform: rotate(1520deg); }
+    /* Roll to bottom-right */
+    85%  { left: 90vw; bottom: 14px;  transform: rotate(3000deg); }
+    100% { left: 90vw; bottom: 14px;  transform: rotate(3100deg); opacity: 1; }
   }
 </style>
 </head>
@@ -506,19 +501,21 @@ function applyUpdate(){
   window.scrollTo({top:0, behavior:"smooth"});
 }
 
-// ===== CELEBRATION =====
+// ===== CELEBRATION (fireworks + bouncing ball) =====
 function playCelebration(){
   const overlay = document.getElementById("celebration");
   if (!overlay) return;
-  const colors = ["#facc15","#fb923c","#ef4444","#22d3ee","#a78bfa","#34d399","#ec4899"];
-  const W = window.innerWidth, H = window.innerHeight;
+  const colors = ["#facc15","#fb923c","#ef4444","#22d3ee","#a78bfa","#34d399","#ec4899","#f472b6"];
+  const W = window.innerWidth;
+  const TOP_ZONE = Math.min(260, window.innerHeight * 0.35); // keep above header content
 
   function burst(x, y){
-    for (let i=0; i<22; i++){
+    const count = window.innerWidth < 480 ? 14 : 22;
+    for (let i=0; i<count; i++){
       const s = document.createElement("div");
       s.className = "spark";
-      const angle = (Math.PI*2) * (i/22);
-      const dist = 60 + Math.random()*80;
+      const angle = (Math.PI*2) * (i/count);
+      const dist = 55 + Math.random()*70;
       s.style.setProperty("--dx", Math.cos(angle)*dist + "px");
       s.style.setProperty("--dy", Math.sin(angle)*dist + "px");
       s.style.left = x + "px";
@@ -531,53 +528,40 @@ function playCelebration(){
     }
   }
   function launch(){
-    const startX = Math.random()*W;
+    const startX = 40 + Math.random()*(W-80);
+    const peakY  = 30 + Math.random()*(TOP_ZONE - 30);
     const f = document.createElement("div");
-    f.className = "firework";
+    f.className = "firework-trail";
     f.style.left = startX + "px";
-    f.style.top  = (H*0.65) + "px";
+    f.style.top  = (peakY + 260) + "px"; // rises up ~260px (matches keyframe)
     const col = colors[Math.floor(Math.random()*colors.length)];
     f.style.background = col;
     f.style.boxShadow = `0 0 14px ${col}`;
     overlay.appendChild(f);
     setTimeout(()=>{
-      burst(startX, H*0.3 + Math.random()*60);
+      burst(startX, peakY);
       f.remove();
     }, 850);
   }
-  for (let i=0; i<10; i++) setTimeout(launch, i*220);
+  // 10 fireworks staggered over ~2.2s; secondary wave at 2.6s
+  const waves = window.innerWidth < 480 ? 7 : 10;
+  for (let i=0; i<waves; i++) setTimeout(launch, i*230);
+  for (let i=0; i<Math.floor(waves/2); i++) setTimeout(launch, 2600 + i*200);
 
-  setTimeout(()=>{
-    const bat = document.createElement("div");
-    bat.className = "bat";
-    overlay.appendChild(bat);
-    const ball = document.createElement("div");
-    ball.className = "ball";
-    overlay.appendChild(ball);
-    setTimeout(()=> burst(W*0.18, H*0.62), 250);
-    const six = document.createElement("div");
-    six.className = "six-text";
-    six.textContent = "SIX!";
-    overlay.appendChild(six);
-  }, 400);
+  // bouncing cricket ball
+  const ball = document.createElement("div");
+  ball.className = "cricket-ball";
+  overlay.appendChild(ball);
 
-  setTimeout(()=> overlay.classList.add("fade"), 4200);
-  setTimeout(()=> overlay.remove(), 5200);
+  // fade and remove
+  setTimeout(()=> overlay.classList.add("fade"), 5200);
+  setTimeout(()=> { if (overlay.parentNode) overlay.remove(); }, 6200);
 }
 
-try {
-  if (!sessionStorage.getItem("fairwaysCelebrated")) {
-    sessionStorage.setItem("fairwaysCelebrated","1");
-    window.addEventListener("load", playCelebration);
-  } else {
-    const ov = document.getElementById("celebration");
-    if (ov) ov.remove();
-  }
-} catch(e) {
-  window.addEventListener("load", playCelebration);
-}
+window.addEventListener("load", playCelebration);
 
 render();
 </script>
 </body>
 </html>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    

@@ -192,7 +192,7 @@
     </div>
     <div class="card rounded-2xl p-4 glow" style="background: linear-gradient(135deg, rgba(250,204,21,0.12), rgba(255,255,255,0.03));">
       <p class="text-[11px] uppercase tracking-wider text-yellow-400 font-bold">Current Leader</p>
-      <p class="text-xl font-black mt-1 truncate" id="statLeaderName">Sandeep</p>
+      <p class="text-lg font-black mt-1 leading-snug" id="statLeaderName">Sandeep</p>
       <p class="text-xs text-yellow-300 mt-1"><span id="statLeaderPts">23</span> pts 🏆</p>
     </div>
     <div class="card rounded-2xl p-4">
@@ -356,7 +356,8 @@ function render(){
     row.rank = rank;
   });
 
-  document.getElementById("statLeaderName").textContent = board[0].name;
+  const leaders = board.filter(r => r.points === board[0].points);
+  document.getElementById("statLeaderName").textContent = leaders.map(r => r.name).join(" & ");
   const second = board.find(r => r.points < board[0].points);
   const gap = second ? (board[0].points - second.points) : 0;
   countUp(document.getElementById("statPlayed"),    state.matchesPlayed,                    1100);
@@ -500,9 +501,4 @@ function playCelebration(){
   setTimeout(()=> { if (overlay.parentNode) overlay.remove(); }, 6200);
 }
 
-window.addEventListener("load", playCelebration);
-render();
-</script>
-</body>
-</html>
-           
+win

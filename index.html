@@ -259,29 +259,29 @@ const TEAMS = {
 };
 
 let state = {
-  updated: "After Match 30 · Updated 20 Apr 2026",
-  matchesPlayed: 30,
+  updated: "After Match 31 · Updated 21 Apr 2026",
+  matchesPlayed: 31,
   matchesTotal: 70,
-  nextLabel: "NEXT MATCH · M31",
-  nextTitle: "SRH vs DC",
-  nextSub:   "21 April 2026 · 7:30 PM IST · Rajiv Gandhi Intl Stadium, Hyderabad",
+  nextLabel: "NEXT MATCH · M32",
+  nextTitle: "LSG vs RR",
+  nextSub:   "22 April 2026 · 7:30 PM IST · Ekana Cricket Stadium, Lucknow",
   nextRight: "Tomorrow",
   pointsTable: [
     { team:"PBKS", M:6, W:5, L:0, NR:1, Pts:11 },
+    { team:"SRH",  M:7, W:4, L:3, NR:0, Pts:8 },
     { team:"RCB",  M:6, W:4, L:2, NR:0, Pts:8 },
     { team:"RR",   M:6, W:4, L:2, NR:0, Pts:8 },
+    { team:"DC",   M:6, W:3, L:3, NR:0, Pts:6 },
     { team:"GT",   M:6, W:3, L:3, NR:0, Pts:6 },
-    { team:"DC",   M:5, W:3, L:2, NR:0, Pts:6 },
-    { team:"SRH",  M:6, W:3, L:3, NR:0, Pts:6 },
     { team:"MI",   M:6, W:2, L:4, NR:0, Pts:4 },
     { team:"LSG",  M:6, W:2, L:4, NR:0, Pts:4 },
     { team:"CSK",  M:6, W:2, L:4, NR:0, Pts:4 },
     { team:"KKR",  M:7, W:1, L:5, NR:1, Pts:3 }
   ],
   recentResults: [
+    { num:"M31", date:"21 Apr", winner:"SRH",  loser:"DC",  margin:"47 runs" },
     { num:"M30", date:"20 Apr", winner:"MI",   loser:"GT",  margin:"99 runs" },
-    { num:"M29", date:"19 Apr", winner:"PBKS", loser:"LSG", margin:"54 runs" },
-    { num:"M28", date:"19 Apr", winner:"KKR",  loser:"RR",  margin:"4 wickets" }
+    { num:"M29", date:"19 Apr", winner:"PBKS", loser:"LSG", margin:"54 runs" }
   ],
   participants: [
     { name:"Jeevan",   teams:["MI","RCB","GT","PBKS"] },
@@ -506,3 +506,4 @@ render();
 </script>
 </body>
 </html>
+        
